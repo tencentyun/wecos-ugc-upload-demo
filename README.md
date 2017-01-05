@@ -50,7 +50,7 @@ pages/ 内包含各个页面的入口和配置，业务逻辑
 ## 配置
 ```json
 {
-    "cosSignatureUrl": "sign_url",
+"cosSignatureUrl": "sign_url",
     "region": "tj",
     "appid": "123456789",
     "bucketname": "xxx",
