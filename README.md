@@ -50,11 +50,11 @@ pages/ 内包含各个页面的入口和配置，业务逻辑
 ## 配置
 ```json
 {
-    "cosSignatureUrl": 'sign_url',
-    "region": 'tj',
-    "appid": '123456789',
-	"bucketname": 'xxx',
-    "dir_name": 'y'
+    "cosSignatureUrl": "sign_url",
+    "region": "tj",
+    "appid": "123456789",
+    "bucketname": "xxx",
+    "dir_name": "y"
 }
 ```
 这些配置项在完成准备工作之后，可以在[COS控制台](https://console.qcloud.com/cos4)拿到
