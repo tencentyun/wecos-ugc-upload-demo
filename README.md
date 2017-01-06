@@ -90,14 +90,14 @@ Page({
             wx.chooseImage({
                 success: function(res) {
 
-                //获取上传图片的地址
+                    //获取上传图片的地址
                     var tempFilePaths = res.tempFilePaths[0];
 
                     //获取上传的图片名
                     var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
                     fileName = fileName[2]
 
-                    //把文件上传到cos
+                    //把文件上传到cos，头部带上签名
                     wx.uploadFile({
                         url: `${cosUrl}/${fileName}`,
                         filePath: tempFilePaths,
