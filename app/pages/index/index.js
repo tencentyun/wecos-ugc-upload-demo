@@ -1,6 +1,21 @@
 //index.js
+
+/**
+ * 需要配置COS相关的config信息
+ * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
+ */
+var config = {
+    cosSignatureUrl: 'https://www.xxxx.com',
+    region: 'tj',
+    appid: '1253189073',
+    bucketname: 'weixintest',
+    dir_name: ''
+};
+
+// 最终上传到cos的URL
+var cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid}/${config.bucketname}${config.dirname}`
+
 //获取应用实例
-var config = require('../../utils/config.js')
 var app = getApp()
 Page({
   data: {
@@ -44,20 +59,7 @@ Page({
             
           }
         })
-
-        
       }
-    })
-  },
-  onLoad: function () {
-    console.log('onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
-      //更新数据
-      that.setData({
-        userInfo:userInfo
-      })
     })
   }
 })

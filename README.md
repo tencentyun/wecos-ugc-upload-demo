@@ -24,7 +24,6 @@ app
 │   │   ├── index.wxss
 │   │   └── index.wxml
 └── utils
-    ├── config.js
     └── util.js
 ```
 
@@ -36,54 +35,61 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 其中比较重要的文件如下：
 
-`config.js` COS信息配置文件
-
 `index.js` 本示例中主要实现用户资源上传的方法
     
 ## 示例
 
 如小程序项目目录为`app`
 
-1、创建`app/util/config.js`，填写cos的配置信息
+1、在`app/pages/index/index.js`中粘贴本示例中的代码
 ```js
+//index.js
+
 /**
  * 需要配置COS相关的config信息
  * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
  */
-const config = {
-    cosSignatureUrl: 'https://www.qq.com',  //此处需填写自己的鉴权服务器地址
-    region: 'tj',   
-    appid: '10000',
-    bucketname: 'wecostest',
+var config = {
+    cosSignatureUrl: 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
+    region: 'tj',
+    appid: '1253189073',
+    bucketname: 'weixintest',
     dir_name: ''
 };
 
-exports.cosSignatureUrl = config.cosSignatureUrl
-exports.cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid}/${config.bucketname}${config.dirname}`
-```
+// 最终上传到cos的URL
+var cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid}/${config.bucketname}${config.dirname}`
 
-2、在`app/pages/index/index.js`中粘贴本示例中的代码
-```js
-var config = require('../../utils/config.js')
+//获取应用实例
 var app = getApp()
 Page({
   data: {
-    ...
+    motto: '上传文件到COS',
+    userInfo: {}
   },
-  //事件处理函数
+  //上传按钮事件处理函数
   uploadToCos: function() {
-
+    
+    // cos鉴权请求，获取签名
     wx.request({
       url: config.cosSignatureUrl,
       success: function(res) {
 
+        // 签名
         const signature = res.data
+
+        // 小程序的选择图片函数
         wx.chooseImage({
           success: function(res) {
+
+            //获取上传图片的地址
             var tempFilePaths = res.tempFilePaths[0];
+
+            //获取上传的图片名
             var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
             fileName = fileName[2]
 
+            //把文件上传到cos
             wx.uploadFile({
               url: `${config.cosUrl}/${fileName}`,
               filePath: tempFilePaths,
@@ -97,9 +103,6 @@ Page({
               success: function(res){
                 var data = res.data
                 //do something
-              },
-              fail: function(e) {
-                console.log('e', e)
               }
             })
             
@@ -126,7 +129,7 @@ Page({
 1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
 2、在`index.js`中引用`config.js`  
 3、在`index.wxml`中绑定上传的方法，`index.js`中写上传方法的实现
- 
+
     调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.chooseImage`方法获取用户上传的图片  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
