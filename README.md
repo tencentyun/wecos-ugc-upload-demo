@@ -36,23 +36,105 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 其中比较重要的文件如下：
 
-`config.js` 配置文件
+`config.js` COS信息配置文件
 
 `index.js` 本示例中主要实现用户资源上传的方法
     
-
-## 使用
+## 流程
 
 1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
-2、引用`config.js`  
+2、在`index.js`中引用`config.js`  
 3、调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
 4、调用`wx.chooseImage`方法获取用户上传的图片  
 5、调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
 6、上传成功
 
-    其中2、3、4、5步可以直接看`app/pages/index/index.js`中的示例
+其中2、3、4、5步直接参考本示例中的`app/pages/index/index.js`
+
+### 示例
+
+如小程序项目目录为`app`
+
+1、创建`app/util/config.js`，填写cos的配置信息
+```js
+/**
+ * 需要配置COS相关的config信息
+ * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
+ */
+const config = {
+    cosSignatureUrl: 'https://www.qq.com',  //此处需填写自己的鉴权服务器地址
+    region: 'tj',   
+    appid: '10000',
+    bucketname: 'wecostest',
+    dir_name: ''
+};
+
+exports.cosSignatureUrl = config.cosSignatureUrl
+exports.cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid}/${config.bucketname}${config.dirname}`
+```
+
+2、在`app/pages/index/index.js`中粘贴本示例中的代码
+```js
+var config = require('../../utils/config.js')
+var app = getApp()
+Page({
+  data: {
+    ...
+  },
+  //事件处理函数
+  uploadToCos: function() {
+
+    wx.request({
+      url: config.cosSignatureUrl,
+      success: function(res) {
+
+        const signature = res.data
+        wx.chooseImage({
+          success: function(res) {
+            var tempFilePaths = res.tempFilePaths[0];
+            var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
+            fileName = fileName[2]
+
+            wx.uploadFile({
+              url: `${config.cosUrl}/${fileName}`,
+              filePath: tempFilePaths,
+              header: {
+                'Authorization': signature
+              },
+              name: 'filecontent',
+              formData: {
+                op: 'upload'
+              },
+              success: function(res){
+                var data = res.data
+                //do something
+              },
+              fail: function(e) {
+                console.log('e', e)
+              }
+            })
+            
+          }
+        })
+      }
+    })
+  }
+})
+```
+
+3、参考本示例，在`app/pages/index/index.wxml`中把js中对应的事件绑定到dom
+```html
+<!--index.wxml-->
+<view class="container">
+  <!-- ... -->
+    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
+  <!-- ... -->
+</view>
+```
+    
 
 ## 配置相关
+
 ```json
 {
     "cosSignatureUrl": "sign_url",

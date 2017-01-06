@@ -3,7 +3,7 @@
  * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
  */
 const config = {
-    cosSignatureUrl: 'https://www.qcloudy.com',
+    cosSignatureUrl: 'https://www.xxxx.com',
     region: 'tj',
     appid: '1253189073',
     bucketname: 'weixintest',
