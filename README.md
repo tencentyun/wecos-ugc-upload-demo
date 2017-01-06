@@ -40,17 +40,6 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 `index.js` 本示例中主要实现用户资源上传的方法
     
-## 流程
-
-1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
-2、在`index.js`中引用`config.js`  
-3、调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
-4、调用`wx.chooseImage`方法获取用户上传的图片  
-5、调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
-6、上传成功
-
-其中2、3、4、5步直接参考本示例中的`app/pages/index/index.js`
-
 ## 示例
 
 如小程序项目目录为`app`
@@ -131,7 +120,17 @@ Page({
   <!-- ... -->
 </view>
 ```
-    
+
+具体流程如下：
+
+1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
+2、在`index.js`中引用`config.js`
+3、在`index.wxml`中绑定上传的方法，`index.js`中写上传方法的实现 
+    调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
+    调用`wx.chooseImage`方法获取用户上传的图片  
+    调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
+4、上传成功  
+
 
 ## 配置相关
 
