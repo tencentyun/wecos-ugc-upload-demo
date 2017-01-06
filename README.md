@@ -78,46 +78,46 @@ Page({
     //上传按钮事件处理函数
     uploadToCos: function() {
     
-    // cos鉴权请求，获取签名
-    wx.request({
-        url: config.cosSignatureUrl,
-        success: function(res) {
+        // cos鉴权请求，获取签名
+        wx.request({
+            url: config.cosSignatureUrl,
+            success: function(res) {
 
-            // 签名
-            const signature = res.data
+                // 签名
+                const signature = res.data
 
-            // 小程序的选择图片函数
-            wx.chooseImage({
-                success: function(res) {
+                // 小程序的选择图片函数
+                wx.chooseImage({
+                    success: function(res) {
 
-                    //获取上传图片的地址
-                    var tempFilePaths = res.tempFilePaths[0];
+                        //获取上传图片的地址
+                        var tempFilePaths = res.tempFilePaths[0];
 
-                    //获取上传的图片名
-                    var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
-                    fileName = fileName[2]
+                        //获取上传的图片名
+                        var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
+                        fileName = fileName[2]
 
-                    //把文件上传到cos，头部带上签名
-                    wx.uploadFile({
-                        url: `${cosUrl}/${fileName}`,
-                        filePath: tempFilePaths,
-                        header: {
-                          'Authorization': signature
-                        },
-                        name: 'filecontent',
-                        formData: {
-                            op: 'upload'
-                        },
-                        success: function(res){
-                            var data = res.data
-                            //do something
-                        }
-                    })
-                }
-            })
-        }
-    })
-  }
+                        //把文件上传到cos，头部带上签名
+                        wx.uploadFile({
+                            url: `${cosUrl}/${fileName}`,
+                            filePath: tempFilePaths,
+                            header: {
+                              'Authorization': signature
+                            },
+                            name: 'filecontent',
+                            formData: {
+                                op: 'upload'
+                            },
+                            success: function(res){
+                                var data = res.data
+                                //do something
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
 })
 ```
 
