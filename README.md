@@ -125,7 +125,8 @@ Page({
 
 1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
 2、在`index.js`中引用`config.js`  
-3、在`index.wxml`中绑定上传的方法，`index.js`中写上传方法的实现 
+3、在`index.wxml`中绑定上传的方法，`index.js`中写上传方法的实现
+ 
     调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.chooseImage`方法获取用户上传的图片  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
