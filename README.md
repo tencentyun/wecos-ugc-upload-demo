@@ -43,11 +43,11 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 ## 使用
 
-1、在`utils`目录下创建`config.js`，在里面填好COS的配置项
-2、引用`config.js`
-3、调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名
-4、调用`wx.chooseImage`方法获取用户上传的图片
-5、调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名
+1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
+2、引用`config.js`  
+3、调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
+4、调用`wx.chooseImage`方法获取用户上传的图片  
+5、调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
 6、上传成功
 
     其中2、3、4、5步可以直接看`app/pages/index/index.js`中的示例
@@ -78,15 +78,13 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 ## COS鉴权相关
 
-调用COSAPI需要鉴权，用于获取签名，如果需要了解具体的鉴权算法，可查看[此处](https://www.qcloud.com/document/product/436/6054)
-
-鉴权生成签名的算法需要用到SecretId、SecretKey，可在[COS控制台](https://console.qcloud.com/cos4/secret)查看
-
 鉴权有两种方式：
 
 1.前端鉴权，前端生成算法会暴露私钥。（**不推荐**）
 
 2.服务端鉴权，安全性高，本示例采用该种方式。（**推荐**）
 
-    鉴权Server需要你自己部署且提供URL地址，基于这种鉴权需求，我们提供了鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)
+* 调用COSAPI需要鉴权，用于获取签名，如果需要了解具体的鉴权算法，可查看[此处](https://www.qcloud.com/document/product/436/6054)  
+* 鉴权生成签名的算法需要用到SecretId、SecretKey，可在[COS控制台](https://console.qcloud.com/cos4/secret)查看
+* 鉴权服务器需要你自己部署且提供URL地址，基于这种鉴权需求，我们提供了鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)
 
