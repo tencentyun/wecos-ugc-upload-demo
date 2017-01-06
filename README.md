@@ -137,7 +137,7 @@ Page({
 
 ```json
 {
-    "cosSignatureUrl": 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
+    "cosSignatureUrl": "https://www.xxxx.com", //此处需填写自己的鉴权服务器地址
     "region": "tj",
     "appid": "123456789",
     "bucketname": "xxx",
