@@ -5,11 +5,11 @@
  * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
  */
 var config = {
-    cosSignatureUrl: 'https://www.xxxx.com',
-    region: 'tj',
-    appid: '1253189073',
-    bucketname: 'weixintest',
-    dir_name: ''
+  cosSignatureUrl: 'https://www.xxxx.com', //填写自己的鉴权服务器地址
+  region: 'tj',
+  appid: '1253189073',
+  bucketname: 'weixintest',
+  dir_name: ''
 };
 
 // 最终上传到cos的URL
@@ -38,7 +38,7 @@ Page({
             fileName = fileName[2]
 
             wx.uploadFile({
-              url: `${config.cosUrl}/${fileName}`,
+              url: `${cosUrl}/${fileName}`,
               filePath: tempFilePaths,
               header: {
                 'Authorization': signature
@@ -56,7 +56,6 @@ Page({
                 console.log('e', e)
               }
             })
-            
           }
         })
       }

@@ -41,7 +41,17 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 如小程序项目目录为`app`
 
-1、在`app/pages/index/index.js`中粘贴本示例中的代码
+1、参考本示例，在`app/pages/index/index.wxml`中把js中对应的事件绑定到dom
+```html
+<!--index.wxml-->
+<view class="container">
+  <!-- ... -->
+    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
+  <!-- ... -->
+</view>
+```
+
+2、在`app/pages/index/index.js`中粘贴本示例中的代码
 ```js
 //index.js
 
@@ -50,11 +60,11 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
  * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
  */
 var config = {
-    cosSignatureUrl: 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
-    region: 'tj',
-    appid: '1253189073',
-    bucketname: 'weixintest',
-    dir_name: ''
+  cosSignatureUrl: 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
+  region: 'tj',
+  appid: '1253189073',
+  bucketname: 'weixintest',
+  dir_name: ''
 };
 
 // 最终上传到cos的URL
@@ -64,8 +74,6 @@ var cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid
 var app = getApp()
 Page({
   data: {
-    motto: '上传文件到COS',
-    userInfo: {}
   },
   //上传按钮事件处理函数
   uploadToCos: function() {
@@ -91,7 +99,7 @@ Page({
 
             //把文件上传到cos
             wx.uploadFile({
-              url: `${config.cosUrl}/${fileName}`,
+              url: `${cosUrl}/${fileName}`,
               filePath: tempFilePaths,
               header: {
                 'Authorization': signature
@@ -105,7 +113,6 @@ Page({
                 //do something
               }
             })
-            
           }
         })
       }
@@ -114,26 +121,16 @@ Page({
 })
 ```
 
-3、参考本示例，在`app/pages/index/index.wxml`中把js中对应的事件绑定到dom
-```html
-<!--index.wxml-->
-<view class="container">
-  <!-- ... -->
-    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
-  <!-- ... -->
-</view>
-```
-
 具体流程如下：
-
-1、在`utils`目录下创建`config.js`，在里面填好COS的配置项  
-2、在`index.js`中引用`config.js`  
-3、在`index.wxml`中绑定上传的方法，`index.js`中写上传方法的实现
-
+ 
+1、在`index.wxml`中绑定上传的方法
+2、在`index.js`中写上传方法的实现
+    
+    填写COS的配置信息
     调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.chooseImage`方法获取用户上传的图片  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
-4、上传成功  
+3、上传成功  
 
 
 ## 配置相关
