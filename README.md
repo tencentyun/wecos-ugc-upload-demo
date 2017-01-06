@@ -73,49 +73,49 @@ var cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid
 //获取应用实例
 var app = getApp()
 Page({
-  data: {
-  },
-  //上传按钮事件处理函数
-  uploadToCos: function() {
+    data: {
+    },
+    //上传按钮事件处理函数
+    uploadToCos: function() {
     
     // cos鉴权请求，获取签名
     wx.request({
-      url: config.cosSignatureUrl,
-      success: function(res) {
+        url: config.cosSignatureUrl,
+        success: function(res) {
 
-        // 签名
-        const signature = res.data
+            // 签名
+            const signature = res.data
 
-        // 小程序的选择图片函数
-        wx.chooseImage({
-          success: function(res) {
+            // 小程序的选择图片函数
+            wx.chooseImage({
+                success: function(res) {
 
-            //获取上传图片的地址
-            var tempFilePaths = res.tempFilePaths[0];
+                //获取上传图片的地址
+                    var tempFilePaths = res.tempFilePaths[0];
 
-            //获取上传的图片名
-            var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
-            fileName = fileName[2]
+                    //获取上传的图片名
+                    var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
+                    fileName = fileName[2]
 
-            //把文件上传到cos
-            wx.uploadFile({
-              url: `${cosUrl}/${fileName}`,
-              filePath: tempFilePaths,
-              header: {
-                'Authorization': signature
-              },
-              name: 'filecontent',
-              formData: {
-                op: 'upload'
-              },
-              success: function(res){
-                var data = res.data
-                //do something
-              }
+                    //把文件上传到cos
+                    wx.uploadFile({
+                        url: `${cosUrl}/${fileName}`,
+                        filePath: tempFilePaths,
+                        header: {
+                          'Authorization': signature
+                        },
+                        name: 'filecontent',
+                        formData: {
+                            op: 'upload'
+                        },
+                        success: function(res){
+                            var data = res.data
+                            //do something
+                        }
+                    })
+                }
             })
-          }
-        })
-      }
+        }
     })
   }
 })
@@ -137,7 +137,7 @@ Page({
 
 ```json
 {
-    "cosSignatureUrl": "sign_url",
+    "cosSignatureUrl": 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
     "region": "tj",
     "appid": "123456789",
     "bucketname": "xxx",
