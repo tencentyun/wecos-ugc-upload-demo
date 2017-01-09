@@ -170,3 +170,10 @@ Page({
 * 鉴权生成签名的算法需要用到SecretId、SecretKey，可在[COS控制台](https://console.qcloud.com/cos4/secret)查看
 * 鉴权服务器需要你自己部署且提供URL地址，基于这种鉴权需求，我们提供了鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)
 
+
+## 相关
+
+* [WeCOS-UGC-DEMO](https://github.com/tencentyun/wecos-ugc-upload-demo)——小程序用户资源上传COS DEMO
+
+* [COS-AUTH](https://github.com/tencentyun/cos-auth)——COS鉴权服务器DEMO
+
