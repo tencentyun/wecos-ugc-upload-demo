@@ -8,6 +8,9 @@ WeCOS-UGC-DEMO展示了微信小程序中有用户上传资源的场景时，如
 * 登录[云对象存储服务（COS）控制台](https://console.qcloud.com/cos4)，开通COS服务，创建资源需要上传的Bucket
 * COS鉴权服务器部署及URL地址（用于调用COSAPI时的鉴权），此处直接用我们鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)，后文也会提到
 <br/>
+* 在小程序官网上配置域名信息（否则无法在小程序中发起对该域名的请求）
+![image](https://cloud.githubusercontent.com/assets/8219248/21755628/cb82ee76-d651-11e6-9c50-861307aaf7ba.png)
+
 
 ## 源码简介
 
