@@ -27,6 +27,7 @@ app
 │   │   ├── index.wxss
 │   │   └── index.wxml
 └── utils
+    ├── upload.js
     └── util.js
 ```
 
@@ -48,16 +49,14 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 //upload.js
 
 /**
- * 把以下字段配置成自己的cos相关信息，详情可看API文档 https://www.qcloud.com/document/product/436/6066
+ * 把以下字段替换成自己的cos相关信息，详情可看API文档 https://www.qcloud.com/document/product/436/6066
  * REGION: cos上传的地区
  * APPID: 账号的appid
  * BUCKET_NAME: cos bucket的名字
  * DIR_NAME: 上传的文件目录
+ * cosSignatureUrl：填写自己的鉴权服务器地址，查看前面的[准备工作]
  */
 var cosUrl = "https://" + REGION + ".file.myqcloud.com/files/v2/" + APPID + "/" + BUCKET_NAME + DIR_NAME
-
-//填写自己的鉴权服务器地址
-var cosSignatureUrl = 'https://www.xxxx.com' 
 
 /**
  * 上传方法
@@ -65,14 +64,15 @@ var cosSignatureUrl = 'https://www.xxxx.com'
  * fileName： 上传到cos后的文件名
  */
 function upload(filePath, fileName) {
+    // 鉴权获取签名
     wx.request({
         url: cosSignatureUrl,
         success: function(cosRes) {
-            var signature = cosRes.data
+            // 头部带上签名，上传文件至COS
             wx.uploadFile({
                 url: cosUrl + '/' + fileName,
                 filePath: filePath,
-                header: { 'Authorization': signature },
+                header: { 'Authorization': cosRes.data },
                 name: 'filecontent',
                 formData: { op: 'upload' },
                 success: function(uploadRes){ //do something }
@@ -80,7 +80,6 @@ function upload(filePath, fileName) {
         }
     })
 }
-
 ```
 
 ## 示例
@@ -128,18 +127,6 @@ Page({
   <!-- ... -->
 </view>
 ```
-
-具体流程如下：
- 
-1、在`index.js`中写上传方法的实现
-    
-    填写COS的配置信息 
-    选择本地的图片（本实例用了小程序提供的wx.chooseImage，你也可以直接写成绝对路径、相对路径等等）
-    调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
-    调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
-2、在`index.wxml`中绑定上传的方法  
-3、上传成功  
-
 
 ## 配置相关
 

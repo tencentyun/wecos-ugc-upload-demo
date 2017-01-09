@@ -17,12 +17,16 @@ var cosSignatureUrl = 'https://www.xxxx.com'
  * fileName： 上传到cos后的文件名
  */
 function upload(filePath, fileName) {
+
+    // 鉴权获取签名
     wx.request({
         url: cosSignatureUrl,
         success: function(cosRes) {
 
+            // 签名
             var signature = cosRes.data
 
+            // 头部带上签名，上传文件至COS
             wx.uploadFile({
                 url: cosUrl + '/' + fileName,
                 filePath: tempFilePaths,
