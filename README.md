@@ -44,17 +44,7 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 
 如小程序项目目录为`app`
 
-1、参考本示例，在`app/pages/index/index.wxml`中把js中对应的事件绑定到dom
-```html
-<!--index.wxml-->
-<view class="container">
-  <!-- ... -->
-    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
-  <!-- ... -->
-</view>
-```
-
-2、在`app/pages/index/index.js`中粘贴本示例中的代码
+1、在`app/pages/index/index.js`中粘贴本示例中的代码
 ```js
 //index.js
 
@@ -81,24 +71,24 @@ Page({
     //上传按钮事件处理函数
     uploadToCos: function() {
     
-        // cos鉴权请求，获取签名
-        wx.request({
-            url: config.cosSignatureUrl,
+        // 小程序的选择图片函数
+        wx.chooseImage({
             success: function(res) {
 
-                // 签名
-                const signature = res.data
+                //获取上传图片的地址
+                var tempFilePaths = res.tempFilePaths[0];
 
-                // 小程序的选择图片函数
-                wx.chooseImage({
-                    success: function(res) {
+                //获取上传的图片名
+                var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
+                fileName = fileName[2]
 
-                        //获取上传图片的地址
-                        var tempFilePaths = res.tempFilePaths[0];
+                // cos鉴权请求，获取签名
+                wx.request({
+                    url: config.cosSignatureUrl,
+                    success: function(cosRes) {
 
-                        //获取上传的图片名
-                        var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
-                        fileName = fileName[2]
+                        // 签名
+                        const signature = cosRes.data
 
                         //把文件上传到cos，头部带上签名
                         wx.uploadFile({
@@ -111,8 +101,8 @@ Page({
                             formData: {
                                 op: 'upload'
                             },
-                            success: function(res){
-                                var data = res.data
+                            success: function(uploadRes){
+                                var data = uploadRes.data
                                 //do something
                             }
                         })
@@ -124,15 +114,25 @@ Page({
 })
 ```
 
+2、参考本示例，在`app/pages/index/index.wxml`中把js中对应的事件绑定到dom
+```html
+<!--index.wxml-->
+<view class="container">
+  <!-- ... -->
+    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
+  <!-- ... -->
+</view>
+```
+
 具体流程如下：
  
-1、在`index.wxml`中绑定上传的方法  
-2、在`index.js`中写上传方法的实现
+1、在`index.js`中写上传方法的实现
     
     填写COS的配置信息
-    调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.chooseImage`方法获取用户上传的图片  
+    调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
+2、在`index.wxml`中绑定上传的方法  
 3、上传成功  
 
 

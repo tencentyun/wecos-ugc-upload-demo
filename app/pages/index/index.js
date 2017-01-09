@@ -26,16 +26,17 @@ Page({
   uploadToCos: function() {
 
     console.log(this)
-    wx.request({
-      url: config.cosSignatureUrl,
+    wx.chooseImage({
       success: function(res) {
+        var tempFilePaths = res.tempFilePaths[0];
+        var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
+        fileName = fileName[2]
 
-        const signature = res.data
-        wx.chooseImage({
-          success: function(res) {
-            var tempFilePaths = res.tempFilePaths[0];
-            var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
-            fileName = fileName[2]
+        wx.request({
+          url: config.cosSignatureUrl,
+          success: function(cosRes) {
+
+            var signature = cosRes.data
 
             wx.uploadFile({
               url: `${cosUrl}/${fileName}`,
@@ -47,9 +48,9 @@ Page({
               formData: {
                 op: 'upload'
               },
-              success: function(res){
-                var data = res.data
-                console.log('res', res)
+              success: function(uploadRes){
+                var data = uploadRes.data
+                console.log('uploadRes', uploadRes)
                 //do something
               },
               fail: function(e) {
