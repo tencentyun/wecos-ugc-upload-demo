@@ -6,6 +6,6 @@
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
-    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
+    <button type="primary" bindtap="uploadToCos" class="user-button"> 一键上传 </button>
   </view>
 </view>

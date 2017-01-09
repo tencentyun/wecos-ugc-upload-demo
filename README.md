@@ -57,7 +57,7 @@ var config = {
   region: 'tj',
   appid: '1253189073',
   bucketname: 'weixintest',
-  dir_name: ''
+  dirname: ''
 };
 
 // 最终上传到cos的URL
@@ -71,41 +71,34 @@ Page({
     //上传按钮事件处理函数
     uploadToCos: function() {
     
-        // 小程序的选择图片函数
-        wx.chooseImage({
-            success: function(res) {
+        // 本示例直接选择本地的一个jpg文件
+        var tempFilePaths = "C:\\Users\\galenye\\Desktop\\nba.jpg";
 
-                //获取上传图片的地址
-                var tempFilePaths = res.tempFilePaths[0];
+        // 指定上传后的文件名
+        var fileName = "nba.jpg";
 
-                //获取上传的图片名
-                var fileName = tempFilePaths.match(/(wxfile:\/\/)(.+)/)
-                fileName = fileName[2]
+        // cos鉴权请求，获取签名
+        wx.request({
+            url: config.cosSignatureUrl,
+            success: function(cosRes) {
 
-                // cos鉴权请求，获取签名
-                wx.request({
-                    url: config.cosSignatureUrl,
-                    success: function(cosRes) {
+                // 签名
+                const signature = cosRes.data
 
-                        // 签名
-                        const signature = cosRes.data
-
-                        //把文件上传到cos，头部带上签名
-                        wx.uploadFile({
-                            url: `${cosUrl}/${fileName}`,
-                            filePath: tempFilePaths,
-                            header: {
-                              'Authorization': signature
-                            },
-                            name: 'filecontent',
-                            formData: {
-                                op: 'upload'
-                            },
-                            success: function(uploadRes){
-                                var data = uploadRes.data
-                                //do something
-                            }
-                        })
+                //把文件上传到cos，头部带上签名
+                wx.uploadFile({
+                    url: `${cosUrl}/${fileName}`,
+                    filePath: tempFilePaths,
+                    header: {
+                      'Authorization': signature
+                    },
+                    name: 'filecontent',
+                    formData: {
+                        op: 'upload'
+                    },
+                    success: function(uploadRes){
+                        var data = uploadRes.data
+                        //do something
                     }
                 })
             }
@@ -119,7 +112,7 @@ Page({
 <!--index.wxml-->
 <view class="container">
   <!-- ... -->
-    <button type="primary" bindtap="uploadToCos" class="user-button"> 上传 </button>
+    <button type="primary" bindtap="uploadToCos" class="user-button"> 一键上传 </button>
   <!-- ... -->
 </view>
 ```
@@ -128,8 +121,8 @@ Page({
  
 1、在`index.js`中写上传方法的实现
     
-    填写COS的配置信息
-    调用`wx.chooseImage`方法获取用户上传的图片  
+    填写COS的配置信息 
+    获取本地的图片（获取图片的方法根据自己的需要去选择，如小程序提供的wx.chooseImage、绝对路径、相对路径等等）
     调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
 2、在`index.wxml`中绑定上传的方法  
