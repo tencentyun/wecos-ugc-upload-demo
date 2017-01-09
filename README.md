@@ -36,10 +36,53 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
     `app.json` 是小程序的微信配置，其中指定了本示例的用户资源上传页面`index`
     `pages目录` 内包含各个页面的入口和配置，业务逻辑，如index目录则为`index`页面
 
-其中比较重要的文件如下：
+其中重要的文件如下：
 
-`index.js` 本示例中主要实现用户资源上传的方法
-    
+`utils/upload.js` 上传cos的核心代码
+
+`pages/index/index.js` 实现用户资源上传的示例
+
+## 核心代码
+
+```js
+//upload.js
+
+/**
+ * 把以下字段配置成自己的cos相关信息，详情可看API文档 https://www.qcloud.com/document/product/436/6066
+ * REGION: cos上传的地区
+ * APPID: 账号的appid
+ * BUCKET_NAME: cos bucket的名字
+ * DIR_NAME: 上传的文件目录
+ */
+var cosUrl = "https://" + REGION + ".file.myqcloud.com/files/v2/" + APPID + "/" + BUCKET_NAME + DIR_NAME
+
+//填写自己的鉴权服务器地址
+var cosSignatureUrl = 'https://www.xxxx.com' 
+
+/**
+ * 上传方法
+ * filePath: 上传的文件路径
+ * fileName： 上传到cos后的文件名
+ */
+function upload(filePath, fileName) {
+    wx.request({
+        url: cosSignatureUrl,
+        success: function(cosRes) {
+            var signature = cosRes.data
+            wx.uploadFile({
+                url: cosUrl + '/' + fileName,
+                filePath: filePath,
+                header: { 'Authorization': signature },
+                name: 'filecontent',
+                formData: { op: 'upload' },
+                success: function(uploadRes){ //do something }
+            })
+        }
+    })
+}
+
+```
+
 ## 示例
 
 如小程序项目目录为`app`
@@ -48,59 +91,28 @@ app目录是小程序目录，如果你没有创建小程序项目，我们可�
 ```js
 //index.js
 
-/**
- * 需要配置COS相关的config信息
- * 详情可看API文档 https://www.qcloud.com/document/product/436/6066
- */
-var config = {
-  cosSignatureUrl: 'https://www.xxxx.com', //此处需填写自己的鉴权服务器地址
-  region: 'tj',
-  appid: '1253189073',
-  bucketname: 'weixintest',
-  dirname: ''
-};
-
-// 最终上传到cos的URL
-var cosUrl = `https://${config.region}.file.myqcloud.com/files/v2/${config.appid}/${config.bucketname}${config.dirname}`
+// upload的核心代码
+var uploadFn = require('../../utils/upload.js')
 
 //获取应用实例
 var app = getApp()
 Page({
-    data: {
-    },
     //上传按钮事件处理函数
     uploadToCos: function() {
     
-        // 本示例直接选择本地的一个jpg文件
-        var tempFilePaths = "C:\\Users\\galenye\\Desktop\\nba.jpg";
+        // 选择上传的图片
+        wx.chooseImage({
+            success: function(res) {
 
-        // 指定上传后的文件名
-        var fileName = "nba.jpg";
+                // 获取文件路径
+                var filePath = res.tempFilePaths[0];
 
-        // cos鉴权请求，获取签名
-        wx.request({
-            url: config.cosSignatureUrl,
-            success: function(cosRes) {
+                // 获取文件名
+                var fileName = filePath.match(/(wxfile:\/\/)(.+)/)
+                fileName = fileName[2]
 
-                // 签名
-                const signature = cosRes.data
-
-                //把文件上传到cos，头部带上签名
-                wx.uploadFile({
-                    url: `${cosUrl}/${fileName}`,
-                    filePath: tempFilePaths,
-                    header: {
-                      'Authorization': signature
-                    },
-                    name: 'filecontent',
-                    formData: {
-                        op: 'upload'
-                    },
-                    success: function(uploadRes){
-                        var data = uploadRes.data
-                        //do something
-                    }
-                })
+                // 文件上传cos，参考上面的核心代码
+                uploadFn(filePath, fileName)
             }
         })
     }
@@ -122,7 +134,7 @@ Page({
 1、在`index.js`中写上传方法的实现
     
     填写COS的配置信息 
-    获取本地的图片（获取图片的方法根据自己的需要去选择，如小程序提供的wx.chooseImage、绝对路径、相对路径等等）
+    选择本地的图片（本实例用了小程序提供的wx.chooseImage，你也可以直接写成绝对路径、相对路径等等）
     调用`wx.request`方法请求配置里指定的COS鉴权域名，获取COS上传所需签名  
     调用`wx.upload`方法发起一个COS的上传请求，在header里带上前面获取的签名  
 2、在`index.wxml`中绑定上传的方法  
@@ -131,27 +143,15 @@ Page({
 
 ## 配置相关
 
-```json
-{
-    "cosSignatureUrl": "https://www.xxxx.com", //此处需填写自己的鉴权服务器地址
-    "region": "tj",
-    "appid": "123456789",
-    "bucketname": "xxx",
-    "dir_name": "y"
-}
-```
-
 | 参数 | 格式 | 说明 |
 |:--|:--|:--|
 |cosSignatureUrl|**[String]**|鉴权服务器的域名|
-|region|**[String]**|资源上传到的地区|
-|appid|**[String]**|账户的appid|
-|bucketname|**[String]**|资源上传到的bucket|
-|dir_name|**[String]**|资源上传到的目录|
+|REGION|**[String]**|资源上传到的地区|
+|APPID|**[String]**|账号的appid|
+|BUCKET_NAME|**[String]**|资源上传到的bucket|
+|DIR_NAME|**[String]**|资源上传到的目录|
 
-
-其中cosSignatureUrl是你自己提供的鉴权Server域名
-这些配置项信息可以在[COS控制台](https://console.qcloud.com/cos4)拿到
+APPID可以在[COS控制台](https://console.qcloud.com/cos4/secret)拿到
 
 
 ## COS鉴权相关
