@@ -29,7 +29,7 @@ function upload(filePath, fileName) {
             // 头部带上签名，上传文件至COS
             wx.uploadFile({
                 url: cosUrl + '/' + fileName,
-                filePath: tempFilePaths,
+                filePath: filePath,
                 header: {
                     'Authorization': signature
                 },
