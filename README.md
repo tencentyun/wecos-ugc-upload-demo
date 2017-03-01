@@ -6,6 +6,7 @@ WeCOS-UGC-DEMO展示了微信小程序中有用户上传资源的场景时，如
 
 * 进入[腾讯云官网](https://www.qcloud.com)，注册帐号
 * 登录[云对象存储服务（COS）控制台](https://console.qcloud.com/cos4)，开通COS服务，创建资源需要上传的Bucket
+* **对 Bucket 设置好跨域配置**
 * COS鉴权服务器部署及URL地址（用于调用COSAPI时的鉴权），此处直接用我们鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)，后文也会提到
 <br/>
 * 在小程序官网上配置域名信息（否则无法在小程序中发起对该域名的请求）
@@ -152,8 +153,7 @@ APPID可以在[COS控制台](https://console.qcloud.com/cos4/secret)拿到
 * 调用COSAPI需要鉴权，用于获取签名，如果需要了解具体的鉴权算法，可查看[此处](https://www.qcloud.com/document/product/436/6054)  
 * 鉴权生成签名的算法需要用到SecretId、SecretKey，可在[COS控制台](https://console.qcloud.com/cos4/secret)查看
 * 鉴权服务器需要你自己部署且提供URL地址，基于这种鉴权需求，我们提供了鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)
-
-
+* 签名有分单次有效签名和多次有效签名，单次有效签名必须传文件路径，多次有效签名一定不要传文件路径，可查看[此处](https://www.qcloud.com/document/product/436/6054)
 ## 相关
 
 * [WeCOS](https://github.com/tencentyun/wecos-ugc-upload-demo)——小程序COS瘦身方案，解决官方1MB限制的烦恼
