@@ -6,6 +6,7 @@ WeCOS-UGC-DEMO展示了微信小程序中有用户上传资源的场景时，如
 
 * 进入[腾讯云官网](https://www.qcloud.com)，注册帐号
 * 登录[云对象存储服务（COS）控制台](https://console.qcloud.com/cos4)，开通COS服务，创建资源需要上传的Bucket
+* 当前 demo 是基于 V4 接口，请确认你使用的 COS Bucket 是V4，如何确定自己应该是用v4的sdk还是v3的？ 登陆https://console.qcloud.com/cos 如果左上角提示是云对象存储v4则说明要用v4的sdk否则就是v3的。
 * **对 Bucket 设置好跨域配置**
 * COS鉴权服务器部署及URL地址（用于调用COSAPI时的鉴权），此处直接用我们鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)，后文也会提到
 <br/>
