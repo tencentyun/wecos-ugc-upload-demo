@@ -153,7 +153,7 @@ APPID可以在[COS控制台](https://console.qcloud.com/cos4/secret)拿到
 * 调用COSAPI需要鉴权，用于获取签名，如果需要了解具体的鉴权算法，可查看[此处](https://www.qcloud.com/document/product/436/6054)  
 * 鉴权生成签名的算法需要用到SecretId、SecretKey，可在[COS控制台](https://console.qcloud.com/cos4/secret)查看
 * 鉴权服务器需要你自己部署且提供URL地址，基于这种鉴权需求，我们提供了鉴权服务端示例[COS-AUTH](https://github.com/tencentyun/cos-auth)
-* 签名有分单次有效签名和多次有效签名，单次有效签名必须传文件路径，多次有效签名一定不要传文件路径，可查看[此处](https://www.qcloud.com/document/product/436/6054)
+* 签名有分单次有效签名和多次有效签名，单次有效签名必须传文件路径，多次有效签名**一定不要传文件路径**，可查看[此处](https://www.qcloud.com/document/product/436/6054)
 
 ## 相关
 
