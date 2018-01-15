@@ -2,6 +2,8 @@
 
 WeCOS-UGC-DEMO展示了微信小程序中有用户上传资源的场景时，如何结合[COS（腾讯云对象存储服务）](https://www.qcloud.com/product/cos)API将资源直接上传至COS
 
+由于 JSON API 接口只支持 20MB 文件，该 demo 不推荐，建议使用 XML API 的小程序 SDK：https://github.com/tencentyun/cos-wx-sdk-v5
+
 ## 准备工作
 
 * 进入[腾讯云官网](https://www.qcloud.com)，注册帐号
